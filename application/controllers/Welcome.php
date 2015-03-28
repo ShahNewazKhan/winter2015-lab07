@@ -11,7 +11,7 @@ class Welcome extends Application {
 
     function __construct()
     {
-	parent::__construct();
+	   parent::__construct();
     }
 
     //-------------------------------------------------------------
@@ -20,11 +20,41 @@ class Welcome extends Application {
 
     function index()
     {
-	// Build a list of orders
-	
-	// Present the list to choose from
-	$this->data['pagebody'] = 'homepage';
-	$this->render();
+    	// Build a list of orders
+    	
+    	// Present the list to choose from
+        
+        $this->load->helper('directory');
+
+        $map = directory_map(FCPATH.'/data');
+
+        $xml = '.xml';
+
+        $new = array(); //Contains only xml files in directory
+
+        $count = 0;
+        //Loop through all file in directory
+        foreach( $map as $m)
+        {
+            $count++;
+            //If file ends in .xml put in $new array
+            if (substr_compare($m, $xml, strlen($m)-strlen($xml), strlen($xml)) === 0
+                && strcmp($m, 'menu.xml') != 0 )    
+                { 
+                    $x = array();
+                    $x['filename'] = $m;
+                    $x['ordertext']= 'order ' . $count;
+                    array_push($new, $x);
+                }
+                else if (strcmp($m, 'menu.xml') == 0)
+                {
+                    $count--;
+                }
+        } 
+
+        $this->data['order'] = $new;
+    	$this->data['pagebody'] = 'homepage';
+    	$this->render();
     }
     
     //-------------------------------------------------------------
@@ -33,11 +63,13 @@ class Welcome extends Application {
 
     function order($filename)
     {
-	// Build a receipt for the chosen order
-	
-	// Present the list to choose from
-	$this->data['pagebody'] = 'justone';
-	$this->render();
+    	// Build a receipt for the chosen order
+        $this->load->model('order'); 
+        $this->order->getOrderInfo($filename);
+
+        // Present the list to choose from
+    	$this->data['pagebody'] = 'justone';
+    	$this->render();
     }
     
 
