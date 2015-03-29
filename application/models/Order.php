@@ -67,35 +67,49 @@ class Order extends CI_Model
                 }
             }   
 
-            foreach($burger->sauce as $sauce)
+            if($burger->sauce)
             {
-                if($burg["sauces"])
+                foreach($burger->sauce as $sauce)
                 {
-                    $burg["sauces"] = $burg["sauces"] . " " .(string)$sauce['type'];
+                    if($burg["sauces"])
+                    {
+                        $burg["sauces"] = $burg["sauces"] . " " .(string)$sauce['type'];
+                    }
+                    else
+                    {
+                        $burg["sauces"] = (string)$sauce['type'];
+                    }
+                    
                 }
-                else
-                {
-                    $burg["sauces"] = (string)$sauce['type'];
-                }
+            }
+            else
+                $burg["sauces"] = "None";
                 
-            }
 
-            foreach($burger->topping as $topping)
+            if($burger->topping)
             {
-                if($burg["toppings"])
+                foreach($burger->topping as $topping)
                 {
-                    $burg["toppings"] = $burg["toppings"] . " " .(string)$topping['type'];
-                    $total += $this->menu->getTopping( (string)$topping['type']);
-                }
-                else
-                {
-                    $burg["toppings"] = (string)$topping['type'];
-                    $total += $this->menu->getTopping( (string)$topping['type']);
+                    if($burg["toppings"])
+                    {
+                        $burg["toppings"] = $burg["toppings"] . " " .(string)$topping['type'];
+                        $total += $this->menu->getTopping( (string)$topping['type']);
+                    }
+                    else
+                    {
+                        $burg["toppings"] = (string)$topping['type'];
+                        $total += $this->menu->getTopping( (string)$topping['type']);
+                    }
                 }
             }
+            else
+                $burg["toppings"] = "None";
+                
 
             if($burger->instructions)
                 $burg["instructions"] = (string)$burger->instructions;
+            else
+                $burg["instructions"] = "N/A";
 
             $burg['burgerTotal'] = $total;
             $orderTotal += $total;
