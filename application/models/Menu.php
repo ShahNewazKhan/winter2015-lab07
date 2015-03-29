@@ -51,7 +51,7 @@ class Menu extends CI_Model {
             $record->code = (string) $topping['code'];
             $record->name = (string) $topping;
             $record->price = (float) $topping['price'];
-            $this->sauces[$record->code] = $record;
+            $this->toppings[$record->code] = $record;
         }
         foreach($this->xml->sauces->sauce as $sauce)
         {
@@ -59,7 +59,7 @@ class Menu extends CI_Model {
             $record->code = (string) $sauce['code'];
             $record->name = (string) $sauce;
             $record->price = (float) $sauce['price'];
-            $this->toppings[$record->code] = $record;
+            $this->sauces[$record->code] = $record;
         }
     }
 

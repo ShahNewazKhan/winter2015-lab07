@@ -6,6 +6,8 @@
 		<p>Cheese: {cheeses}</p>
 		<p>Toppings: {toppings}</p>
 		<p>Sauces: {sauces}</p>
+		<p>Burger Total: ${burgerTotal}</p>
 		<br /><br />
 	{/burgers}
+	Order TOTAL: {orderTotal}
 </div>

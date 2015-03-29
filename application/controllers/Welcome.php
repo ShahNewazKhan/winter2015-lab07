@@ -70,6 +70,7 @@ class Welcome extends Application {
         $this->data['ordernumber'] = $order['orderNo'];
         $this->data['name'] = $order['customer'];
         $this->data['ordertype'] = $order['orderType'];
+        $this->data['orderTotal'] = $order['orderTotal'];
 
         $this->data['burgers'] = $order['burgers'];
         // Present the list to choose from
