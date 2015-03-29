@@ -65,8 +65,13 @@ class Welcome extends Application {
     {
     	// Build a receipt for the chosen order
         $this->load->model('order'); 
-        $this->order->getOrderInfo($filename);
+        $order = $this->order->getOrderInfo($filename);
 
+        $this->data['ordernumber'] = $order['orderNo'];
+        $this->data['name'] = $order['customer'];
+        $this->data['ordertype'] = $order['orderType'];
+
+        $this->data['burgers'] = $order['burgers'];
         // Present the list to choose from
     	$this->data['pagebody'] = 'justone';
     	$this->render();

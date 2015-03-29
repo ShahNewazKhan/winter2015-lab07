@@ -3,37 +3,92 @@
 class Order extends CI_Model 
 {
 
-    protected $xml = null;
-    protected $burgers = array();
-    protected $customer = null;
-    protected $orderNo = null;
-    protected $ordertype = null;
+    protected $xml = null; 
+
     // Constructor
     public function __construct() 
     {
-        parent::__construct();
+        parent::__construct();   
     }
 
     public function getOrderInfo($filename)
     {
+        $burgers = array();
+        $order = array();
+
+        $order['orderNo'] = preg_replace('/\\.[^.\\s]{3,4}$/', '', $filename);
         $this->xml = simplexml_load_file(DATAPATH . $filename);
-        $customer = $this->xml->customer;
-        $ordertype = $this->xml->attributes()->type;
+        $order['customer'] = $this->xml->customer;
+        $order['orderType'] = $this->xml->attributes()->type;
 
         foreach( $this->xml->burger as $burger)
         {
             $burg = array();
-            $burg["base"] = $burger->patty['type'];
+            $burg["cheeses"] = " ";
+            $burg["sauces"] = " ";
+            $burg["toppings"] = " ";
+            $sauces = array();
+            $toppings = array();
             
-            var_dump($burg);
+            $burg["patty"] = (string)$burger->patty['type'];
+            
+            if($burger->cheeses['top'])
+            {
+                if($burg["cheeses"])
+                {
+                    $burg["cheeses"] = $burg["cheeses"]."  ".(string)$burger->cheeses['top'];
+                }
+                else
+                {
+                    $burg["cheeses"] = (string)$burger->cheeses['top'];
+                }
+            }
+            
+            if($burger->cheeses['bottom'])
+            {
+                if($burg["cheeses"])
+                {
+                    $burg["cheeses"] = $burg["cheeses"]."  ".(string)$burger->cheeses['bottom'];
+                }
+                else
+                {
+                    $burg["cheeses"] = (string)$burger->cheeses['bottom'];
+                }
+            }   
+            
+            foreach($burger->sauce as $sauce)
+            {
+                if($burg["sauces"])
+                {
+                    $burg["sauces"] = $burg["sauces"] . " " .(string)$sauce['type'];
+                }
+                else
+                {
+                    $burg["sauces"] = (string)$sauce['type'];
+                }
+                
+            }
+
+            foreach($burger->topping as $topping)
+            {
+                if($burg["toppings"])
+                {
+                    $burg["toppings"] = $burg["toppings"] . " " .(string)$topping['type'];
+                }
+                else
+                {
+                    $burg["toppings"] = (string)$topping['type'];
+                }
+            }
+
+            $burg["instructions"] = (string)$burger->instructions;
+
+            array_push($burgers, $burg);
         }
         
-        /*
-        foreach ($this->xml->burger as $burger) 
-        {
-            $burgerSpec = new stdClass();
-            $burgerSpec->
-        }*/
+        $order['burgers'] = $burgers;
+        
+        return $order;
     }
 
 }
