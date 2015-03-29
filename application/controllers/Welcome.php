@@ -25,6 +25,7 @@ class Welcome extends Application {
     	// Present the list to choose from
         
         $this->load->helper('directory');
+        $this->load->model('order');
 
         $map = directory_map(DATAPATH);
 
@@ -43,7 +44,8 @@ class Welcome extends Application {
                 { 
                     $x = array();
                     $x['filename'] = $m;
-                    $x['ordertext']= 'order ' . $count;
+                    $order = $this->order->getOrderInfo($m);
+                    $x['ordertext']= 'order ' . $count . ' (' . $order['customer'] . ')';
                     array_push($new, $x);
                 }
                 else if (strcmp($m, 'menu.xml') == 0)
