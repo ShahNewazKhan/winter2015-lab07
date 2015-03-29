@@ -26,7 +26,7 @@ class Welcome extends Application {
         
         $this->load->helper('directory');
 
-        $map = directory_map(FCPATH.'/data');
+        $map = directory_map(DATAPATH);
 
         $xml = '.xml';
 

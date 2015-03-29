@@ -8,13 +8,16 @@ class Order extends CI_Model
     // Constructor
     public function __construct() 
     {
-        parent::__construct();   
+        parent::__construct();    
     }
 
     public function getOrderInfo($filename)
     {
         $burgers = array();
         $order = array();
+
+        $this->load->model('menu');
+        $this->menu->buildMenu();
 
         $order['orderNo'] = preg_replace('/\\.[^.\\s]{3,4}$/', '', $filename);
         $this->xml = simplexml_load_file(DATAPATH . $filename);
@@ -30,8 +33,11 @@ class Order extends CI_Model
             $sauces = array();
             $toppings = array();
             
+            $total = 0.0;
+
             $burg["patty"] = (string)$burger->patty['type'];
-            
+            $total = $this->menu->getPatty($burg["patty"]);
+
             if($burger->cheeses['top'])
             {
                 if($burg["cheeses"])
@@ -81,7 +87,8 @@ class Order extends CI_Model
                 }
             }
 
-            $burg["instructions"] = (string)$burger->instructions;
+            if($burger->instructions)
+                $burg["instructions"] = (string)$burger->instructions;
 
             array_push($burgers, $burg);
         }
